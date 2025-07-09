@@ -113,6 +113,20 @@ const getRemoteUploadStatus = async (id) => {
   return response.data;
 };
 
+const listRunningConverts = async () => {
+  const url = `${API_BASE_URL}/file/runningconverts`;
+  const params = getStreamtapeParams(); // No folder ID needed for this endpoint
+  const response = await axios.get(url, { params });
+  return response.data;
+};
+
+const listFailedConverts = async () => {
+  const url = `${API_BASE_URL}/file/failedconverts`;
+  const params = getStreamtapeParams(); // No folder ID needed for this endpoint
+  const response = await axios.get(url, { params });
+  return response.data;
+};
+
 module.exports = {
   listVideos,
   getVideoThumbnail,
@@ -122,4 +136,6 @@ module.exports = {
   uploadFileToStreamtape,
   initiateRemoteUpload,
   getRemoteUploadStatus,
+  listRunningConverts,
+  listFailedConverts,
 };

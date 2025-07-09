@@ -10,6 +10,8 @@ const {
   getDownloadLink,
   initiateRemoteUpload,
   getRemoteUploadStatus,
+  listRunningConverts,
+  listFailedConverts,
 } = require("../utils/streamtapeApi");
 
 // Route: Get all videos from a Streamtape folder
@@ -192,6 +194,44 @@ router.get("/remote-upload-status/:id", async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+});
+
+// Route: Get all running video conversions
+router.get("/videos/running-converts", async (req, res, next) => {
+  try {
+    const response = await listRunningConverts();
+
+    if (response.status === 200 && response.result) {
+      res.json({ success: true, converts: response.result });
+    } else {
+      console.error("Streamtape API error (runningconverts):", response.msg);
+      res.status(response.status || 500).json({
+        success: false,
+        message: response.msg || "Failed to fetch running conversions.",
+      });
+    }
+  } catch (error) {
+    next(error); // Pass to the centralized error handler
+  }
+});
+
+// Route: Get all failed video conversions
+router.get("/videos/failed-converts", async (req, res, next) => {
+  try {
+    const response = await listFailedConverts();
+
+    if (response.status === 200 && response.result) {
+      res.json({ success: true, converts: response.result });
+    } else {
+      console.error("Streamtape API error (failedconverts):", response.msg);
+      res.status(response.status || 500).json({
+        success: false,
+        message: response.msg || "Failed to fetch failed conversions.",
+      });
+    }
+  } catch (error) {
+    next(error); // Pass to the centralized error handler
   }
 });
 
